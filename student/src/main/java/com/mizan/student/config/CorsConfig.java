@@ -1,5 +1,7 @@
 package com.mizan.student.config;
 
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -23,5 +25,14 @@ public class CorsConfig {
                         .allowedHeaders("*");
             }
         };
+    }
+
+    @Bean
+    public OpenAPI myCustomerConfig()
+    {
+        return new OpenAPI().info(
+                new Info().title("Student project")
+                        .description("By Prince")
+        );
     }
 }

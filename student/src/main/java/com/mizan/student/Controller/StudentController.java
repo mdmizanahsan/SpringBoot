@@ -22,6 +22,16 @@ public class StudentController {
         return studentService.getallStudents();
     }
 
+    @GetMapping("/cred")
+    public List<String> getAllStudentCred()
+    {
+        List<Student> students = studentService.getallStudents();
+
+        return students.stream()
+                .map(s-> "Name: " +s.getName() + ",Email: " + s.getEmail())
+                .toList();
+    }
+
     @PostMapping
     public Student addStudent(@RequestBody Student student)
     {

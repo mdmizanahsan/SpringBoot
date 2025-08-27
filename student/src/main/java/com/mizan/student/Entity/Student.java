@@ -13,15 +13,21 @@ public class Student {
     private Long id;
     private String name;
     private String email;
+    private Long age;
+    private String gender;
+    private String discreption;
+    private Long contact;
 
     public Student() {
     }
-
-    public Student(Long id, String name, String email)
-    {
+    public Student(Long id, String name, String email, Long age, String gender, String discreption, Long contact) {
         this.id = id;
         this.name = name;
         this.email = email;
+        this.age = age;
+        this.gender = gender;
+        this.discreption = discreption;
+        this.contact = contact;
     }
 
     public Long getId() {
@@ -47,4 +53,20 @@ public class Student {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public Long getAge() { return age; }
+
+    public void setAge(Long age) { this.age = age; }
+
+    public String getGender() { return gender; }
+
+    public void setGender(String gender) { this.gender = gender; }
+
+    public String getDiscreption() { return discreption; }
+
+    public void setDiscreption(String discreption) { this.discreption = discreption; }
+
+    public Long getContact() { return contact; }
+
+    public void setContact(Long contact) { this.contact = contact; }
 }
