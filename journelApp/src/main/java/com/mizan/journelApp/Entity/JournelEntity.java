@@ -1,8 +1,14 @@
 package com.mizan.journelApp.Entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
+import java.time.LocalDateTime;
+import java.util.Date;
+
+@Data
 @Entity
 public class JournelEntity {
 
@@ -13,30 +19,8 @@ public class JournelEntity {
 
     private String content;
 
+    private LocalDateTime date;
 
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTittle() {
-        return tittle;
-    }
-
-    public void setTittle(String tittle) {
-        this.tittle = tittle;
-    }
-
-    public String getContent() {
-        return content;
-
-    }
-
-    public void setContent(String content) {
-        this.content = content;
+    public void setDate(LocalDateTime now) {
     }
 }
