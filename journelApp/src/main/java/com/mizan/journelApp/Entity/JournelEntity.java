@@ -1,19 +1,17 @@
 package com.mizan.journelApp.Entity;
 
-import jakarta.persistence.*;
+
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
-
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 import java.time.LocalDateTime;
-import java.util.Date;
 
+@Document(collection = "journal_entries")
 @Data
-@Entity
 public class JournelEntity {
 
     @Id
-    private Long id;
+    private Object id;
 
     private String tittle;
 
