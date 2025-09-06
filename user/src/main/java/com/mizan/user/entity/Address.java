@@ -1,6 +1,7 @@
 package com.mizan.user.entity;
 
 import jakarta.persistence.Embeddable;
+import jakarta.persistence.Embedded;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,4 +16,8 @@ public class Address {
     private String district;
     private int pincode;
     private String area;
+
+
+    @Embedded
+    private Coordinate coordinate;
 }
