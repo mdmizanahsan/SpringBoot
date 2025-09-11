@@ -10,14 +10,14 @@ import java.util.List;
 @Service
 public class UserService {
 
-    @Autowired
-    private static UserRepository userRepository;
+
+    private final UserRepository userRepository;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    public static List<User> getAllUsers() {
+    public  List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
@@ -33,7 +33,11 @@ public class UserService {
 
     // Delete by Id
     public Long deleteUserById(Long Id) {
-        userRepository.deleteById(Id);
-        return Id;
+        if (userRepository.existsById(Id)) {
+            userRepository.deleteById(Id);
+            return Id;
+        } else {
+            throw new RuntimeException("User not found with id: " + Id);
+        }
     }
 }
