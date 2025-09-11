@@ -40,9 +40,30 @@ public class UserController {
     }
 
     @GetMapping("/{Id}")
-    public User getUserById(@PathVariable Long Id) {
-        return userService.getUserById(Id);
+    public UserResponse getUserById(@PathVariable Long Id) {
+        User user = userService.getUserById(Id);
+
+        if (user != null) {
+            return UserResponse.builder()
+                    .timestamp(LocalDateTime.now().toString())
+                    .transactionId(UUID.randomUUID().toString())
+                    .status("OK")
+                    .code("200.200")
+                    .message(Arrays.asList("User fetched successfully with id: " + Id))
+                    .users(Arrays.asList(user))
+                    .build();
+        } else {
+            return UserResponse.builder()
+                    .timestamp(LocalDateTime.now().toString())
+                    .transactionId(UUID.randomUUID().toString())
+                    .status("ERROR")
+                    .code("404.404")
+                    .message(Arrays.asList("User not found with id: " + Id))
+                    .users(Arrays.asList())
+                    .build();
+        }
     }
+
     @PostMapping
     public UserResponse saveUser(@RequestBody User user) {
         User savedUser = userService.saveUser(user);
@@ -57,8 +78,56 @@ public class UserController {
                 .build();
     }
 
-    @DeleteMapping("/{Id}")
-    public Long deleteUser(@PathVariable Long Id ) {
-        return userService.deleteUserById(Id);
+    // Update User by ID
+    @PutMapping("/{Id}")
+    public UserResponse updateUser(@PathVariable Long Id, @RequestBody User user) {
+        User updatedUser = userService.updateUser(Id, user);
+
+        if (updatedUser != null) {
+            return UserResponse.builder()
+                    .timestamp(LocalDateTime.now().toString())
+                    .transactionId(UUID.randomUUID().toString())
+                    .status("OK")
+                    .code("200.200")
+                    .message(Arrays.asList("User updated successfully"))
+                    .users(Arrays.asList(updatedUser))
+                    .build();
+        } else {
+            return UserResponse.builder()
+                    .timestamp(LocalDateTime.now().toString())
+                    .transactionId(UUID.randomUUID().toString())
+                    .status("ERROR")
+                    .code("404.404")
+                    .message(Arrays.asList("User not found with id: " + Id))
+                    .users(Arrays.asList())
+                    .build();
+        }
     }
+
+
+    @DeleteMapping("/{Id}")
+    public UserResponse deleteUser(@PathVariable Long Id) {
+        try {
+            Long deletedId = userService.deleteUserById(Id);
+
+            return UserResponse.builder()
+                    .timestamp(LocalDateTime.now().toString())
+                    .transactionId(UUID.randomUUID().toString())
+                    .status("OK")
+                    .code("200.200")
+                    .message(Arrays.asList("User deleted successfully with id: " + deletedId))
+                    .users(Arrays.asList())
+                    .build();
+        } catch (RuntimeException e) {
+            return UserResponse.builder()
+                    .timestamp(LocalDateTime.now().toString())
+                    .transactionId(UUID.randomUUID().toString())
+                    .status("ERROR")
+                    .code("404.404")
+                    .message(Arrays.asList(e.getMessage()))
+                    .users(Arrays.asList())
+                    .build();
+        }
+    }
+
 }
