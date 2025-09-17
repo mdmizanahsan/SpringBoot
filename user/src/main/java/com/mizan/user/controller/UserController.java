@@ -3,6 +3,7 @@ package com.mizan.user.controller;
 import com.mizan.user.entity.UserEntity;
 import com.mizan.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,4 +33,29 @@ public class UserController {
     private UserEntity saveUser(@RequestBody UserEntity userEntity) {
        return userService.saveUser(userEntity);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
+        try {
+            Long deletedId = userService.deleteUserById(id);
+            return ResponseEntity.ok("User with ID " + deletedId + " deleted successfully!");
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserEntity> updateUser(
+            @PathVariable Long id,
+            @RequestBody UserEntity userDetails) {
+        try {
+            UserEntity updatedUser = userService.updateUser(id, userDetails);
+            return ResponseEntity.ok(updatedUser);
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(404).body(null);
+        }
+    }
+
+
+
 }
