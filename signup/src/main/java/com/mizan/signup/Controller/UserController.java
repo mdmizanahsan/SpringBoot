@@ -1,5 +1,7 @@
 package com.mizan.signup.Controller;
 
+import com.mizan.signup.Dto.LoginRequest;
+import com.mizan.signup.Dto.LoginResponse;
 import com.mizan.signup.Dto.SignupRequest;
 import com.mizan.signup.Dto.SignupResponse;
 import com.mizan.signup.Service.UserService;
@@ -23,5 +25,10 @@ public class UserController {
     public ResponseEntity<SignupResponse> signup(@RequestBody SignupRequest request) {
         SignupResponse response = userService.registerUser(request);
         return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login(@RequestBody LoginRequest request) {
+        return ResponseEntity.ok(userService.login(request));
     }
 }

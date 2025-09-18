@@ -1,6 +1,5 @@
 package com.mizan.signup.Dto;
 
-import com.mizan.signup.Entity.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,11 +9,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class SignupResponse {
+public class LoginResponse {
 
     private Long id;
     private String username;
     private String email;
-    private Role role;
+    private String role;
     private String message;
 }

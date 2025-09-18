@@ -21,9 +21,9 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable()) // ✅ CSRF disable
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/auth/signup").permitAll() //  signup endpoint public
+                        .requestMatchers("/api/auth/signup", "/api/auth/login").permitAll() //  signup endpoint public
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form.disable())

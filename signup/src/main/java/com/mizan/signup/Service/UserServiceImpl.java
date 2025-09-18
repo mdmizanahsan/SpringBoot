@@ -1,5 +1,7 @@
 package com.mizan.signup.Service;
 
+import com.mizan.signup.Dto.LoginRequest;
+import com.mizan.signup.Dto.LoginResponse;
 import com.mizan.signup.Dto.SignupRequest;
 import com.mizan.signup.Dto.SignupResponse;
 import com.mizan.signup.Entity.Role;
@@ -53,6 +55,25 @@ public class UserServiceImpl implements UserService {
                 .username(savedUser.getUsername())
                 .email(savedUser.getEmail())
                 .role(savedUser.getRole())
+                .message("User registered successfully")
+                .build();
+    }
+
+    @Override
+    public LoginResponse login(LoginRequest request) {
+        User user = userRepository.findByEmail(request.getEmail())
+                .orElseThrow(() -> new RuntimeException("User not found with this Email"));
+
+        if (!passwordEncoder.matches(request.getPassword() ,user.getPassword())) {
+            throw new RuntimeException("Invalid Password");
+        }
+
+        return LoginResponse.builder()
+                .id(user.getId())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .role(user.getRole().name())  // <-- convert Role enum to String
+                .message("Login successful")
                 .build();
     }
 }
