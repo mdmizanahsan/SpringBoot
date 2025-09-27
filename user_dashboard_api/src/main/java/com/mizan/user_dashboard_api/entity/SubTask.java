@@ -1,10 +1,7 @@
 package com.mizan.user_dashboard_api.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
 @AllArgsConstructor
@@ -12,6 +9,8 @@ import lombok.NoArgsConstructor;
 @Data
 @Table
 @Builder
+@Getter
+@Setter
 public class SubTask {
 
     @Id
@@ -24,4 +23,6 @@ public class SubTask {
     @ManyToOne
     @JoinColumn(name = "task_id")
     private Task task;
+
+
 }

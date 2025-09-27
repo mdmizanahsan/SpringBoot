@@ -20,13 +20,9 @@ public class Team {
     private String id;
 
     private String name;
-    @ManyToMany
-    @JoinTable(
-            name = "team_members",
-            joinColumns = @JoinColumn(name = "team_id"),
-            inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
-    private List<User> members;
+
+    @ElementCollection
+    private List<String> members;
 
 
     @OneToMany(mappedBy = "team", cascade = CascadeType.ALL)

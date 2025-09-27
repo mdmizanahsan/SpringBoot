@@ -1,4 +1,4 @@
-package com.mizan.user_dashboard_api.entity.enums;
+package com.mizan.user_dashboard_api.domains;
 
 public enum ProjectStatus {
     ACTIVE,

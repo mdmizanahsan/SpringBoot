@@ -10,6 +10,7 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/users")
@@ -24,14 +25,28 @@ public class UserController {
     @PostMapping
     public ResponseEntity<User> create(@RequestBody User user) {
         try {
-            user.setJoinedAt(Instant.now());
-            userService.create(user);
-            return new ResponseEntity<>(user, HttpStatus.CREATED);
+            user.setJoinedAt(LocalDateTime.now());
+
+            if(user.getNotifications() != null) {
+                user.getNotifications().forEach(notification -> {
+                    notification.setTimeStamp(LocalDateTime.now());
+                    notification.setUser(user);
+                    if(notification.getRead() == null) {
+                        notification.setRead(false);
+                    }
+                });
+            }
+
+            User created = userService.create(user);
+            return new ResponseEntity<>(created, HttpStatus.CREATED);
 
         } catch (Exception e) {
-          return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+
 
     @GetMapping
     public ResponseEntity<?> getAll() {

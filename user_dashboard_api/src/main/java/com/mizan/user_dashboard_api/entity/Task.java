@@ -1,13 +1,12 @@
 package com.mizan.user_dashboard_api.entity;
 
-import com.mizan.user_dashboard_api.entity.enums.TaskPriority;
-import com.mizan.user_dashboard_api.entity.enums.TaskStatus;
+import com.mizan.user_dashboard_api.domains.TaskPriority;
+import com.mizan.user_dashboard_api.domains.TaskStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.apache.catalina.LifecycleState;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -1,6 +1,6 @@
 package com.mizan.user_dashboard_api.entity;
 
-import com.mizan.user_dashboard_api.entity.enums.ProjectStatus;
+import com.mizan.user_dashboard_api.domains.ProjectStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

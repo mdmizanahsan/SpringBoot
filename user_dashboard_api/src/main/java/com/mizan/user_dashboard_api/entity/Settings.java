@@ -1,7 +1,7 @@
 package com.mizan.user_dashboard_api.entity;
 
-import com.mizan.user_dashboard_api.entity.enums.Language;
-import com.mizan.user_dashboard_api.entity.enums.Theme;
+import com.mizan.user_dashboard_api.domains.Language;
+import com.mizan.user_dashboard_api.domains.Theme;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
