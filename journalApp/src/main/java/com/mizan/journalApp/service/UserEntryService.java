@@ -1,5 +1,7 @@
 package com.mizan.journalApp.service;
 
+import com.mizan.journalApp.dto.UserRequestDTO;
+import com.mizan.journalApp.dto.UserResponseDTO;
 import com.mizan.journalApp.entity.UserEntry;
 import org.apache.catalina.User;
 
@@ -9,13 +11,13 @@ import java.util.Optional;
 public interface UserEntryService {
 
 
-    UserEntry createUser(UserEntry userEntry);
+    UserResponseDTO createUser(UserRequestDTO dto);
 
-    List<UserEntry> getAll();
+    List<UserResponseDTO> getAll();
 
-    Optional<UserEntry> getById(Long id);
+    UserResponseDTO getById(Long id);
 
-    UserEntry update(UserEntry userEntry, Long id);
+    UserResponseDTO updateUser(Long id, UserRequestDTO dto);
 
-    void deleteById(Long id);
+    void deleteUser(Long id);
 }

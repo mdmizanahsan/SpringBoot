@@ -1,18 +1,21 @@
 package com.mizan.journalApp.service;
 
+import com.mizan.journalApp.dto.JournalRequestDTO;
+import com.mizan.journalApp.dto.JournalResponseDTO;
 import com.mizan.journalApp.entity.JournalEntry;
 
 import java.util.List;
 
 public interface JournalEntryService {
 
-    JournalEntry create(Long id, JournalEntry journalEntry);
 
-    List<JournalEntry> getAll(Long id);
+    JournalResponseDTO createEntry(Long id, JournalRequestDTO dto);
 
-    JournalEntry getById(Long id, Long entryId);
+    List<JournalResponseDTO> getAll(Long userId);
 
-    JournalEntry update(Long id, Long entryId, JournalEntry updated);
+    JournalResponseDTO getById(Long userId, Long entryId);
 
-    void deleteById(Long id, Long entryId);
+    JournalResponseDTO updateEntry(Long userId, Long entryId, JournalRequestDTO dto);
+
+    void daleteEntry(Long userId, Long entryId);
 }

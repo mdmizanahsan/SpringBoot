@@ -18,10 +18,12 @@ public class UserEntry {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NonNull
+    @Column(nullable = false)
     private String username;
+    @Column(nullable = false)
     private String password;
 
     @OneToMany(mappedBy = "userEntry", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<JournalEntry> journalEntries = new ArrayList<>();
+
 }
