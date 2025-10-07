@@ -5,6 +5,7 @@ import com.mizan.journalApp.dto.LoginResponseDTO;
 import com.mizan.journalApp.dto.UserRequestDTO;
 import com.mizan.journalApp.dto.UserResponseDTO;
 import com.mizan.journalApp.repository.UserEntryRepository;
+import com.mizan.journalApp.security.JwtUtil;
 import com.mizan.journalApp.service.UserEntryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,6 +30,7 @@ public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
     private final UserEntryRepository userEntryRepository;
+    private final JwtUtil jwtUtil;
 
     @PostMapping("/signup")
     public ResponseEntity<UserResponseDTO> signup(@RequestBody UserRequestDTO dto) {
@@ -36,16 +39,19 @@ public class AuthController {
         }
         return new ResponseEntity<>(userEntryService.createUser(dto), HttpStatus.CREATED);
     }
-
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> login(@RequestBody LoginRequestDTO dto) {
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(dto.getUsername(), dto.getPassword())
         );
 
+        UserDetails user = (UserDetails) auth.getPrincipal();
+        String token = jwtUtil.generateToken(user.getUsername());
+
         LoginResponseDTO response = new LoginResponseDTO();
-        response.setMessage("Login successful!");
         response.setUsername(dto.getUsername());
+        response.setMessage(token); // ✅ send token as message or create field `token`
+
         return ResponseEntity.ok(response);
     }
 }
