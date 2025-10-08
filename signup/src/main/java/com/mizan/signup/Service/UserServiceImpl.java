@@ -7,6 +7,7 @@ import com.mizan.signup.Dto.SignupResponse;
 import com.mizan.signup.Entity.Role;
 import com.mizan.signup.Entity.User;
 import com.mizan.signup.Repository.UserRepository;
+import com.mizan.signup.Util.JwtUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -15,17 +16,18 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil; // ✅ JwtUtil inject karo
 
     public UserServiceImpl(UserRepository userRepository,
-                           PasswordEncoder passwordEncoder) {
+                           PasswordEncoder passwordEncoder,
+                           JwtUtil jwtUtil) {   // constructor me add karo
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
     }
-
 
     @Override
     public SignupResponse registerUser(SignupRequest request) {
-        // Check if user/email already exists
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new RuntimeException("User already taken");
         }
@@ -33,14 +35,9 @@ public class UserServiceImpl implements UserService {
             throw new RuntimeException("Email already registered");
         }
 
-        // Encoded Password
         String encodedPassword = passwordEncoder.encode(request.getPassword());
-
-
-        // String role → Enum role
         Role role = Role.valueOf(request.getRole().toUpperCase());
 
-        // create user
         User user = User.builder()
                 .username(request.getUsername())
                 .email(request.getEmail())
@@ -48,7 +45,7 @@ public class UserServiceImpl implements UserService {
                 .role(role)
                 .build();
 
-       User savedUser =  userRepository.save(user);
+        User savedUser = userRepository.save(user);
 
         return SignupResponse.builder()
                 .id(savedUser.getId())
@@ -64,15 +61,19 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found with this Email"));
 
-        if (!passwordEncoder.matches(request.getPassword() ,user.getPassword())) {
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
             throw new RuntimeException("Invalid Password");
         }
+
+        // ✅ Ab token generate karo
+        String token = jwtUtil.generateToken(user.getEmail());
 
         return LoginResponse.builder()
                 .id(user.getId())
                 .username(user.getUsername())
                 .email(user.getEmail())
-                .role(user.getRole().name())  // <-- convert Role enum to String
+                .role(user.getRole().name()) // Enum → String
+                .token(token)                // Ab token pass karo
                 .message("Login successful")
                 .build();
     }

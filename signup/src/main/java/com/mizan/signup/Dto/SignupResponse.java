@@ -16,5 +16,6 @@ public class SignupResponse {
     private String username;
     private String email;
     private Role role;
+    private String token;
     private String message;
 }

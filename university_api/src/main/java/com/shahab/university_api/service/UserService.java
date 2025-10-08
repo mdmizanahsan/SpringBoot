@@ -5,7 +5,7 @@ import com.shahab.university_api.entity.User;
 import java.util.List;
 
 public interface UserService {
-    List<User> findAll();
+    List<User> findAll() throws Exception;
     User saveUser(User user);
     User findById(String id);
     User findByUsername(String username);

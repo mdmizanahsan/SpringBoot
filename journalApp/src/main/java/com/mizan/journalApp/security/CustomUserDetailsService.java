@@ -10,12 +10,17 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RestController;
 
+
+// Ye class DB se user load karti hai when token verify hota hai
+
 @Service
 @RequiredArgsConstructor
 public class CustomUserDetailsService implements UserDetailsService {
 
 
     private final UserEntryRepository userRepository;
+
+    // Spring Security jab token verify karta hai, to username se user load karta hai
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
