@@ -1,13 +1,11 @@
 package com.mizan.library_management_system.repository;
 
-import com.mizan.library_management_system.model.User;
-import jakarta.validation.constraints.NotBlank;
+import com.mizan.library_management_system.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Optional;
+
 
 public interface UserRepository extends JpaRepository<User,Long> {
-
-    UserDetails findByUsername(String username);
-
-    boolean existsByUsername(@NotBlank(message = "username required") String username);
+    Optional<Object> findByUsername(String username);
 }

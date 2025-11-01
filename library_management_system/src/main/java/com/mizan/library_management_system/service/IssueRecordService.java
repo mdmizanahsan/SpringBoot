@@ -1,13 +1,9 @@
 package com.mizan.library_management_system.service;
 
-import com.mizan.library_management_system.model.IssueRecord;
-
-import java.util.List;
+import com.mizan.library_management_system.entity.IssueRecord;
 
 public interface IssueRecordService {
-    IssueRecord issueBook(Long bookId, Long studentId);
+    IssueRecord issueTheBook(Long bookId);
 
-    IssueRecord returnBook(Long issueId);
-
-    List<IssueRecord> getAllRecords();
+    IssueRecord returnTheBook(Long issueRecordId);
 }

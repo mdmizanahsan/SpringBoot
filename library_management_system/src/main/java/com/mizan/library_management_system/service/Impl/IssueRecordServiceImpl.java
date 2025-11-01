@@ -1,18 +1,17 @@
 package com.mizan.library_management_system.service.Impl;
 
-import com.mizan.library_management_system.exception.ResourceNotFoundException;
-import com.mizan.library_management_system.model.Book;
-import com.mizan.library_management_system.model.IssueRecord;
-import com.mizan.library_management_system.model.Student;
+import com.mizan.library_management_system.entity.Book;
+import com.mizan.library_management_system.entity.IssueRecord;
+import com.mizan.library_management_system.entity.User;
 import com.mizan.library_management_system.repository.BookRepository;
 import com.mizan.library_management_system.repository.IssueRecordRepository;
-import com.mizan.library_management_system.repository.StudentRepository;
+import com.mizan.library_management_system.repository.UserRepository;
 import com.mizan.library_management_system.service.IssueRecordService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,47 +19,52 @@ public class IssueRecordServiceImpl implements IssueRecordService {
 
     private final IssueRecordRepository issueRecordRepository;
     private final BookRepository bookRepository;
-    private final StudentRepository studentRepository;
+    private final UserRepository userRepository;
 
     @Override
-    public IssueRecord issueBook(Long bookId, Long studentId) {
-       Book book = bookRepository.findById(bookId).orElseThrow(
-               () -> new ResourceNotFoundException("Book not found with id " + bookId)
-       );
+    public IssueRecord issueTheBook(Long bookId) {
+        Book book = bookRepository.findById(bookId)
+                .orElseThrow(()-> new RuntimeException("Book Not Found"));
 
-         if (!book.isAvailable()) {
-             throw new RuntimeException("Book is already issued !");
-         }
+        if(book.getQuantity()<=0 || !book.getIsAvailable()) {
+            throw new RuntimeException("Book is not available");
+        }
 
-       Student student = studentRepository.findById(studentId).orElseThrow(
-               () -> new ResourceNotFoundException("Student not found with id " + studentId));
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        User user = (User) userRepository.findByUsername(username)
+                .orElseThrow( ()-> new RuntimeException("User not Found"));
 
-       IssueRecord record = IssueRecord.builder()
-               .book(book)
-               .student(student)
-               .issueDate(LocalDate.now())
-               .build();
+        IssueRecord issueRecord = new IssueRecord();
+        issueRecord.setIssueData(LocalDate.now());
+        issueRecord.setDueData(LocalDate.now().plusDays(14));
+        issueRecord.setIsReturned(false);
+        issueRecord.setUser(user);
+        issueRecord.setBook(book);
 
-       book.setAvailable(false);
-       bookRepository.save(book);
-       return issueRecordRepository.save(record);
+        book.setQuantity(book.getQuantity() - 1);
+        if (book.getQuantity()==0) {
+            book.setIsAvailable(false);
+        }
+        bookRepository.save(book);
+        return issueRecordRepository.save(issueRecord);
     }
 
     @Override
-    public IssueRecord returnBook(Long issueId) {
-        IssueRecord record = issueRecordRepository.findById(issueId)
-                .orElseThrow(() -> new ResourceNotFoundException("Issue record not found with id " + issueId));
-           Book book = record.getBook();
-           book.setAvailable(true);
-           record.setReturnDate(LocalDate.now());
+    public IssueRecord returnTheBook(Long issueRecordId) {
+        IssueRecord issueRecord = issueRecordRepository.findById(issueRecordId)
+                .orElseThrow( ()-> new RuntimeException("Issue Record not found"));
 
-           bookRepository.save(book);
-           return issueRecordRepository.save(record);
+        if (issueRecord.getIsReturned()) {
+            throw new RuntimeException("Book Already returned");
+        }
+
+        Book book = issueRecord.getBook();
+        book.setQuantity(book.getQuantity()+1);
+        book.setIsAvailable(true);
+        bookRepository.save(book);
+
+        issueRecord.setReturnData(LocalDate.now());
+        issueRecord.setIsReturned(true);
+       return issueRecordRepository.save(issueRecord);
     }
-
-    @Override
-    public List<IssueRecord> getAllRecords() {
-        return issueRecordRepository.findAll();
-    }
-
 }
